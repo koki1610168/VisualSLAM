@@ -1,19 +1,23 @@
 import numpy as np
-import cv2
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
-img = cv2.imread('../data/test_1.png',0)
+# Figureを追加
+fig = plt.figure(figsize = (8, 8))
 
-# Initiate STAR detector
-orb = cv2.ORB_create()
+# 3DAxesを追加
+ax = fig.add_subplot(111, projection='3d')
 
-# find the keypoints with ORB
-kp = orb.detect(img,None)
+# Axesのタイトルを設定
+ax.set_title("", size = 20)
 
-# compute the descriptors with ORB
-kp, des = orb.compute(img, kp)
 
-# draw only keypoints location,not size and orientation
-img2 = cv2.drawKeypoints(img,kp, outImage=None, color=(0,255,0), flags=0)
-cv2.imshow("img", img2)
-cv2.destroyAllWindows()
+# -5～5の乱数配列(100要素)
+x = 10 * np.random.rand(100, 1) - 5
+y = 10 * np.random.rand(100, 1) - 5
+z = 10 * np.random.rand(100, 1) - 5
+
+# 曲線を描画
+ax.scatter(x, y, z, s = 40, c = "blue")
+
+plt.show()
