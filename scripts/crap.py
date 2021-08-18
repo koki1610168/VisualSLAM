@@ -10,4 +10,4 @@ K = np.array([[focal_length_distance * 1/W, 0, W//2],
 
 Kinv = np.linalg.inv(K)
 
-print(Kinv)
+print(np.dot(K, Kinv))

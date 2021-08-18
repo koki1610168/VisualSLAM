@@ -7,12 +7,15 @@ from skimage.transform import EssentialMatrixTransform
 
 
 class Extract:
-    def __init__(self, K):
+    def __init__(self, K, F, W, H):
         self.bf = cv2.BFMatcher(cv2.NORM_L1, crossCheck=False)
         self.p = {"x": [], "y": []}
         self.keys = None
         self.orb = cv2.ORB_create()
         self.K = K
+        self.F = F
+        self.W = W
+        self.H = H
 # ransac with skimage
 
     def withOrb(self, img):
@@ -51,10 +54,15 @@ class Extract:
         self.keys = {"kp": kp, "des": des}
         return good, idx1, idx2
 
-    def calculateIntrinsicParameters(self, point, focal):
+    def calculateIntrinsicParameters(self, point):
         Kinv = np.linalg.inv(self.K)
-        cameraCoor = np.dot(Kinv, np.array([point[0], point[1], 1]))
-        cameraCoor[2] = (focal * abs(cameraCoor[0]))/point[0]
+        cameraCoor = np.dot(Kinv, np.array(
+            [point[0], point[1], 1]))
+        # point coordinates when the origin is the center of the image
+        #p0 = (point[0] - self.W//2)
+        #p1 = (point[1] - self.H//2)
+        #print(cameraCoor[1], p1)
+        #cameraCoor[2] = self.F * cameraCoor[1] / p1
         return [int(round(cameraCoor[0])), int(round(cameraCoor[1])), int(round(cameraCoor[2]))]
 
 
