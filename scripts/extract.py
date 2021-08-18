@@ -1,3 +1,4 @@
+import math
 import cv2
 import numpy as np
 from skimage.measure import ransac
@@ -54,10 +55,16 @@ class Extract:
         self.keys = {"kp": kp, "des": des}
         return good, idx1, idx2
 
-    def calculateIntrinsicParameters(self, point):
+# image coordinate system -> camera coordinate system
+    def calculateIntrinsicParameters(self, point, a1, a2, b1, b2):
         Kinv = np.linalg.inv(self.K)
         cameraCoor = np.dot(Kinv, np.array(
             [point[0], point[1], 1]))
+        length = math.sqrt((b1 - a1)**2 + (b2 - a2)**2) + 0.001
+        cameraCoor[2] = 200 / length
+        if cameraCoor[2] > 300:
+            cameraCoor[2] = 300
+        print(cameraCoor)
         # point coordinates when the origin is the center of the image
         #p0 = (point[0] - self.W//2)
         #p1 = (point[1] - self.H//2)
