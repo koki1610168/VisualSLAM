@@ -1,23 +1,13 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
-# Figureを追加
-fig = plt.figure(figsize = (8, 8))
+W = 860
+H = 540
+focal_length_distance = 200
 
-# 3DAxesを追加
-ax = fig.add_subplot(111, projection='3d')
+K = np.array([[focal_length_distance * 1/W, 0, W//2],
+              [0, focal_length_distance * 1/H, H//2],
+              [0, 0, 1]])
 
-# Axesのタイトルを設定
-ax.set_title("", size = 20)
+Kinv = np.linalg.inv(K)
 
-
-# -5～5の乱数配列(100要素)
-x = 10 * np.random.rand(100, 1) - 5
-y = 10 * np.random.rand(100, 1) - 5
-z = 10 * np.random.rand(100, 1) - 5
-
-# 曲線を描画
-ax.scatter(x, y, z, s = 40, c = "blue")
-
-plt.show()
+print(Kinv)
