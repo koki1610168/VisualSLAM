@@ -21,8 +21,8 @@ class Extract:
 
     def withOrb(self, img):
         points = cv2.goodFeaturesToTrack(np.mean(img, axis=2).astype(
-            np.uint8), 3000, qualityLevel=0.01, minDistance=3)
-        kp = [cv2.KeyPoint(x=f[0][0], y=f[0][1], _size=20) for f in points]
+            np.uint8), 3000, qualityLevel=0.001, minDistance=3)
+        kp = [cv2.KeyPoint(x=f[0][0], y=f[0][1], size=20) for f in points]
         kp, des = self.orb.compute(img, kp)
         #img = cv2.drawKeypoints(img, kp, outImage=None, color=(0, 255, 0), flags=0)
         good = []
@@ -48,7 +48,7 @@ class Extract:
                                     FundamentalMatrixTransform,
                                     min_samples=8,
                                     residual_threshold=1,
-                                    max_trials=100)
+                                    max_trials=200)
             good = good[inliers]
             idx1 = idx1[inliers]
             idx2 = idx2[inliers]
@@ -64,7 +64,6 @@ class Extract:
         cameraCoor[2] = 200 / length
         if cameraCoor[2] > 300:
             cameraCoor[2] = 300
-        print(cameraCoor)
         # point coordinates when the origin is the center of the image
         #p0 = (point[0] - self.W//2)
         #p1 = (point[1] - self.H//2)
